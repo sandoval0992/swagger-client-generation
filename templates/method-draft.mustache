@@ -7,39 +7,14 @@
 {{/parameters}}
  *
  */
- // eslint-disable-next-line complexity
-{{&methodName}}(parameters,ctx){
-    if(parameters === undefined) {
-        parameters = {};
-    }
 
-    const baseUri = this.url;
+{{&methodName}}(parameters = {}){
 
-    {{#hasBasePath}}
-        // eslint-disable-next-line prefer-const
-        let path = "{{&basePath}}{{&path}}";
-    {{/hasBasePath}}
-    {{^hasBasePath}}
-        // eslint-disable-next-line prefer-const
-        let path = "{{&path}}";
-    {{/hasBasePath}}
-
+    let uri = '{{&domain}}{{&path}}';
     let body;
     const queryParameters = {};
     const headers = {};
     const form = {};
-
-    {{#isSecure}}
-        if(this.token){
-            if (this.token.isQuery) {
-                queryParameters[this.token.headerOrQueryName] = this.token.value;
-            } else if (this.token.headerOrQueryName) {
-                headers[this.token.headerOrQueryName] = this.token.value;
-            } else {
-                headers["Authorization"] = "Bearer " + this.token.value;
-            }
-        }
-    {{/isSecure}}
 
     {{#headers}}
         headers["{{&name}}"] = [{{&value}}];
@@ -68,7 +43,7 @@
         {{/isQueryParameter}}
 
         {{#isPathParameter}}
-            path = path.replace("{{=<% %>=}}{<%&name%>}<%={{ }}=%>", parameters["{{&camelCaseName}}"]);
+            uri = uri.replace("{{=<% %>=}}{<%&name%>}<%={{ }}=%>", parameters["{{&camelCaseName}}"]);
         {{/isPathParameter}}
 
         {{#isHeaderParameter}}
@@ -119,31 +94,32 @@
             headers[headerName] = header;
         });
     }
-    const error = this._validateRequest("{{&methodName}}", body);
-    if(error){
-        return error;
-    }
+//    const error = this._validateRequest("{{&methodName}}", body);
+//    if(error){
+//        return error;
+//    }
 
     const requestOptions = {
         method: "{{method}}",
-        uri: baseUri + path,
+        uri: uri,
         qs: queryParameters,
         headers,
-        body,
-        preRequestCallBackParams: parameters.$preRequestCallBackParams
+        body
     };
 
 
 
     {{#isGET}}
-        if ( this.operationsMetadata.{{&methodName}}.produces && this.operationsMetadata.{{&methodName}}.produces.includes("application/json")) {
-            requestOptions.json=true;
-        }
+//        if ( this.operationsMetadata.{{&methodName}}.produces && this.operationsMetadata.{{&methodName}}.produces.includes("application/json")) {
+//            requestOptions.json=true;
+//        }
     {{/isGET}}
 
     if(Object.keys(form).length > 0) {
         requestOptions.form = form;
     }
 
-    return this._sendRequest(requestOptions, monitoringCtx);
+    console.log(`Request options: ${JSON.stringify(requestOptions)}`);
+
+    return this._sendRequest(requestOptions);
  }

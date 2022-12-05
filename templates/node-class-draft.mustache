@@ -11,11 +11,9 @@
                                                                  (_| |_)
  */
 
-const baseHttpClient = require("{{&importPrefix}}/http/baseHttpClient");
+const baseHttpClient = require("../../http/baseHttpClient");
 const Ajv = require("ajv");
 const logger = require("log4js").getLogger("{{&className}}");
-
-/* eslint-disable no-trailing-spaces */
 
 /**
  * @typedef {Object} ClientOptions
@@ -60,6 +58,7 @@ class {{&className}} extends baseHttpClient {
     {{#methods}}
         {{> method}}
     {{/methods}}
+
 
     _validateRequest(methodName, body){
             const validator = this.ajv.compile({ $ref: 'swaggerSpecs#/definitions/' + methodName + 'Req' });
