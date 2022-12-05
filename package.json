@@ -4,13 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "natoursApiClientGen": "node apiClientGenerator swaggerSpecs='./swagger/natours-api.yaml' outputFile='./discover/client/NatoursApiClient.js'",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "js-yaml": "^3.13.1",
+    "log4js": "^6.7.1",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
     "swagger-js-codegen": "^1.12.0"
   }
 }
