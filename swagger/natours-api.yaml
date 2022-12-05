@@ -1,0 +1,165 @@
+swagger: '2.0'
+info:
+  title: Natours API
+  description: Natours API description
+  termsOfService: TODO
+  contact:
+    name: Natours Dev Team
+    url: https://www.natours.com/support
+    email: natours-dev@support.com
+  version: 1.0.0
+host: localhost:8001
+basePath: '/api/v1'
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  Authorization:
+    name: Authorization
+    in: header
+    description: Bearer acces token in JWT format
+    type: string
+paths:
+  '/tours':
+    post:
+      description: Create a new Tour
+      operationId: createTour
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/createTourRequest'
+      responses:
+        '200':
+          description: Created
+      tags: ['Tours']
+    get:
+      description: Query information from all available tours
+      operationId: getAllTours
+      parameters:
+        - $ref: '#/parameters/Authorization'
+      responses:
+        '200':
+          description: OK
+      tags: ['Tours']
+  '/tours/{tourId}':
+    get:
+      description: Query information from tours individually
+      operationId: getTour
+      parameters:
+        - name: tourId
+          in: path
+          description: Unique value identifying a tour
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+      tags: ['Tours']
+    patch:
+      description: Update tour details
+      operationId: updateTour
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - name: tourId
+          in: path
+          description: Unique value identifying a tour
+          required: true
+          type: string
+        - in: body
+          name: updateTourRequest
+          schema:
+            $ref: '#/definitions/createTourRequest'
+      responses:
+        '200':
+          description: OK
+      tags: ['Tours']
+    delete:
+      description: Delete a tour record from data base
+      operationId: deleteTour
+      parameters:
+        - $ref: '#/parameters/Authorization'
+        - name: tourId
+          in: path
+          description: Unique value identifying a tour
+          required: true
+          type: string
+      responses:
+        '204':
+          description: No Content
+      tags: ['Tours']
+definitions:
+  createTourRequest:
+    type: object
+    properties:
+      name:
+        description: Tour name
+        example: Zion National Park
+        type: string
+      duration:
+        description: Number of days the tour lasts
+        example: 3
+        type: integer
+      maxGroupSize:
+        description: Maximun number of people allowed in a group
+        example: 15
+        type: integer
+      difficulty:
+        description: How challenging is going on this trip
+        example: easy
+        type: string
+        enum: ['aesy', 'medium', 'difficult']
+      price:
+        description: Tour price in dollars
+        example: 450
+        type: number
+      raitingsAverage:
+        description: Tour's rate average
+        example: 4.9
+        type: number
+        default: 4.5
+      summary:
+        description: Brief description about tour details
+        example: Follow the paths where native people and pioneers walked. Gaze up at massive sandstone cliffs of cream, pink, and red that soar into a brilliant blue sky.
+        type: string
+      imageCover:
+        description: background image displayed in UI
+        example: zion_national_park.jpg
+        type: string
+      startLocation:
+        $ref: '#/definitions/startLocation'
+  startLocation:
+    properties:
+      description:
+        description: Place where the adventure begins
+        example: Zion Canyon Visitor Center
+        type: string
+      coordinates:
+        description: Georefrence express as latitude and longitude coordinates used to place starting point in a map
+        example: 37.20038717086271, -112.98651618883386
+        type: array
+        items:
+          type: number
+      address:
+        description: Meeting point address
+        example: Zion National Park, 1 Zion Park Blvd, Springdale, UT 84767
+        type: string
+      guides:
+        description: ID of the guide who will accompany you during the tour
+        example: 5c8a21d02f8fb814b56fa189
+        type: array
+        items:
+          type: string
+tags:
+  [
+    { name: 'Tours' },
+    { name: 'Users' },
+    { name: 'Reviews' },
+    { name: 'Bookings' },
+    { name: 'Authentication' },
+  ]
